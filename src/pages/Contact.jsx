@@ -430,44 +430,5 @@ const ContactPage = () => {
     </div>
   );
 };
-<Helmet>
-  <script type="application/ld+json">
-    {`
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Easy Invoice Pro",
-        "url": "https://www.easyinvoicepro.online",
-        "logo": "https://www.easyinvoicepro.online/logo.png",
-        "contactPoint": [{
-          "@type": "ContactPoint",
-          "telephone": "+92-348-1776890",
-          "email": "arshmanrasool75@gmail.com",
-          "contactType": "customer support",
-          "areaServed": "PK",
-          "availableLanguage": ["English", "Urdu"]
-        }],
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "Eden Value Home",
-          "addressLocality": "Lahore",
-          "addressCountry": "PK"
-        },
-        "founder": {
-          "@type": "Person",
-          "name": "Arshman Rasool",
-          "email": "arshmanrasool75@gmail.com",
-          "jobTitle": "Founder & CEO",
-          "telephone": "+92-348-1776890",
-          "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Lahore",
-            "addressCountry": "PK"
-          }
-        }
-      }
-    `}
-  </script>
-</Helmet>
 
 export default ContactPage;
