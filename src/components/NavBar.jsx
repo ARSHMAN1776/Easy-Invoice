@@ -291,7 +291,7 @@ const NavBar = () => {
   const handleReceiptInvoiceClick = () => {
     if (pathname.startsWith('/receipt')) {
       // Go back to invoice form/editor
-      navigate('/');
+      navigate('/home');
     } else {
       // Go to receipt preview
       try {

@@ -44,7 +44,7 @@ const TemplatePage = () => {
   };
 
   const handleBack = () => {
-    navigate('/');
+    navigate('/home');
   };
 
   if (!formData) {

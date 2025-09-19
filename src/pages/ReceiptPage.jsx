@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader2, RefreshCw, FileText, RotateCw } from "lucide-react";
+import { Loader2, RefreshCw, FileText, RotateCw, Download, Printer, ChevronDown, Plus, Trash2, Building2, Receipt, Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Receipt1 from "../components/templates/Receipt1";
 import Receipt2 from "../components/templates/Receipt2";
@@ -30,34 +30,20 @@ const generateRandomInvoiceNumber = () => {
 
   return result;
 };
+
 const footerOptions = [
   "Thank you for choosing us today! We hope your shopping experience was pleasant and seamless. Your satisfaction matters to us, and we look forward to serving you again soon. Keep this receipt for any returns or exchanges.",
   "Your purchase supports our community! We believe in giving back and working towards a better future. Thank you for being a part of our journey. We appreciate your trust and hope to see you again soon.",
-  "We value your feedback! Help us improve by sharing your thoughts on the text message survey link. Your opinions help us serve you better and improve your shopping experience. Thank you for shopping with us!",
-  "Did you know you can save more with our loyalty program? Ask about it on your next visit and earn points on every purchase. It’s our way of saying thank you for being a loyal customer. See you next time!",
-  "Need assistance with your purchase? We’re here to help! Reach out to our customer support, or visit our website for more information. We’re committed to providing you with the best service possible.",
-  "Keep this receipt for returns or exchanges.",
-  "Every purchase makes a difference! We are dedicated to eco-friendly practices and sustainability. Thank you for supporting a greener planet with us. Together, we can build a better tomorrow.",
-  "Have a great day!",
-  "“Thank you for shopping with us today. Did you know you can return or exchange your items within 30 days with this receipt? We want to ensure that you’re happy with your purchase, so don’t hesitate to come back if you need assistance.",
-  "Eco-friendly business. This receipt is recyclable.",
-  "We hope you enjoyed your shopping experience! Remember, for every friend you refer, you can earn exclusive rewards. Visit www.example.com/refer for more details. We look forward to welcoming you back soon!",
-  "Thank you for choosing us! We appreciate your business and look forward to serving you again. Keep this receipt for any future inquiries or returns.",
-  "Your purchase supports local businesses and helps us continue our mission. Thank you for being a valued customer. We hope to see you again soon!",
-  "We hope you had a great shopping experience today. If you have any feedback, please share it with us on our website. We are always here to assist you.",
-  "Thank you for your visit! Remember, we offer exclusive discounts to returning customers. Check your email for special offers on your next purchase.",
-  "Your satisfaction is our top priority. If you need any help or have questions about your purchase, don’t hesitate to contact us. Have a great day!",
-  "We love our customers! Thank you for supporting our business. Follow us on social media for updates on promotions and new products. See you next time!",
-  "Every purchase counts! We are committed to making a positive impact, and your support helps us achieve our goals. Thank you for shopping with us today!",
-  "We hope you found everything you needed. If not, please let us know so we can improve your experience. Your feedback helps us serve you better. Thank you!",
-  "Thank you for visiting! Did you know you can save more with our rewards program? Ask about it during your next visit and start earning points today!",
-  "We appreciate your trust in us. If you ever need assistance with your order, please visit our website or call customer service. We’re here to help!",
+  
 ];
 
 const ReceiptPage = () => {
   const navigate = useNavigate();
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isPrinting, setIsPrinting] = useState(false);
+  const [currencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
   const receiptRef = useRef(null);
+  const currencyRef = useRef(null);
 
   const [billTo, setBillTo] = useState("");
   const [invoice, setInvoice] = useState({
@@ -80,6 +66,20 @@ const ReceiptPage = () => {
   const [footer, setFooter] = useState("Thank you");
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
   const prevStateRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (currencyRef.current && !currencyRef.current.contains(event.target)) {
+        setCurrencyDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const refreshFooter = () => {
     const randomIndex = Math.floor(Math.random() * footerOptions.length);
@@ -232,6 +232,14 @@ const ReceiptPage = () => {
     }
   };
 
+  const handlePrint = () => {
+    setIsPrinting(true);
+    setTimeout(() => {
+      window.print();
+      setIsPrinting(false);
+    }, 100);
+  };
+
   const handleBack = () => {
     navigate("/");
   };
@@ -277,66 +285,129 @@ const ReceiptPage = () => {
     return subTotal + taxAmount;
   };
 
-  return (
-    <div className="container mx-auto px-4 py-8 relative">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Receipt Generator</h1>
-        <div className="flex items-center">
-            <select
-              value={selectedCurrency}
-              onChange={(e) => setSelectedCurrency(e.target.value)}
-              className="mr-4 p-2 border rounded"
-              aria-label="Select currency"
-            >
-              {WORLD_CURRENCIES.map((c) => (
-                <option key={c.code} value={c.code}>{c.code} - {c.name}</option>
-              ))}
-            </select>
-          <Button
-            onClick={handleDownloadPDF}
-            disabled={isDownloading}
-            className="mr-4"
-          >
-            {isDownloading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Downloading...
-              </>
-            ) : (
-              "Download Receipt PDF"
-            )}
-          </Button>
-          <button
-            onClick={() => navigate("/")}
-            className="bg-blue-500 text-white p-2 rounded-full shadow-lg hover:bg-blue-600"
-            aria-label="Switch to Bill Generator"
-          >
-            <FileText size={24} />
-          </button>
-        </div>
-      </div>
+  const selectedCurrencyObj = WORLD_CURRENCIES.find(c => c.code === selectedCurrency);
 
-      <div className="flex flex-col md:flex-row gap-8">
-        <div className="w-full md:w-1/2 bg-white p-6 rounded-lg shadow-md">
-          <form>
-            <div className="mb-6">
-              <h2 className="text-2xl font-semibold mb-4">Your Company</h2>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-8 px-4">
+      <div className="container mx-auto max-w-7xl">
+        {/* Animated Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 space-y-4 md:space-y-0 animate-fade-in">
+          <div className="flex items-center space-x-3">
+            <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg animate-pulse">
+              <Receipt className="h-8 w-8 text-white" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Receipt Generator
+              </h1>
+              <p className="text-gray-600 text-sm">Create professional receipts instantly</p>
+            </div>
+          </div>
+          
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Enhanced Currency Dropdown */}
+            <div className="relative" ref={currencyRef}>
+              <button
+                onClick={() => setCurrencyDropdownOpen(!currencyDropdownOpen)}
+                className="flex items-center space-x-2 bg-white px-4 py-2.5 rounded-xl shadow-md border border-gray-200 hover:shadow-lg transition-all duration-200 hover:bg-gray-50 min-w-[160px]"
+              >
+                <div className="flex items-center space-x-2 flex-1">
+                  <span className="text-2xl">{selectedCurrencyObj?.symbol || '$'}</span>
+                  <div className="text-left">
+                    <div className="font-semibold text-sm text-gray-700">{selectedCurrency}</div>
+                    <div className="text-xs text-gray-500 truncate">{selectedCurrencyObj?.name}</div>
+                  </div>
+                </div>
+                <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${currencyDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {currencyDropdownOpen && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-200 z-50 max-h-60 overflow-y-auto animate-slide-down">
+                  {WORLD_CURRENCIES.map((currency) => (
+                    <button
+                      key={currency.code}
+                      onClick={() => {
+                        setSelectedCurrency(currency.code);
+                        setCurrencyDropdownOpen(false);
+                      }}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 transition-colors ${
+                        selectedCurrency === currency.code ? 'bg-blue-50 border-l-4 border-blue-500' : ''
+                      }`}
+                    >
+                      <span className="text-xl">{currency.symbol}</span>
+                      <div className="text-left flex-1">
+                        <div className="font-medium text-sm text-gray-700">{currency.code}</div>
+                        <div className="text-xs text-gray-500 truncate">{currency.name}</div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Action Buttons */}
+            <button
+              onClick={handlePrint}
+              disabled={isPrinting}
+              className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:bg-green-600 disabled:opacity-50 hover-lift"
+            >
+              {isPrinting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Printer className="h-4 w-4" />
+              )}
+              <span className="hidden sm:inline">Print</span>
+            </button>
+
+            <button
+              onClick={handleDownloadPDF}
+              disabled={isDownloading}
+              className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50 transform hover:scale-105 hover-lift"
+            >
+              {isDownloading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span className="hidden sm:inline">Downloading...</span>
+                </>
+              ) : (
+                <>
+                  <Download className="h-4 w-4" />
+                  <span className="hidden sm:inline">Download PDF</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+          {/* Form Section */}
+          <div className="space-y-6 animate-slide-in-left">
+            {/* Company Information Card */}
+            <div className="bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20 receipt-card">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <Building2 className="h-5 w-5 text-blue-600" />
+                </div>
+                <h2 className="text-xl font-semibold text-gray-800">Company Information</h2>
+              </div>
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FloatingLabelInput
                   id="yourCompanyName"
-                  label="Name"
+                  label="Company Name"
                   value={yourCompany.name}
                   onChange={handleInputChange(setYourCompany)}
                   name="name"
                 />
                 <FloatingLabelInput
                   id="yourCompanyPhone"
-                  label="Phone"
+                  label="Phone Number"
                   value={yourCompany.phone}
                   onChange={handleInputChange(setYourCompany)}
                   name="phone"
                 />
               </div>
+              
               <FloatingLabelInput
                 id="yourCompanyAddress"
                 label="Address"
@@ -345,58 +416,61 @@ const ReceiptPage = () => {
                 name="address"
                 className="mt-4"
               />
-              <div className="relative mt-4">
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div className="relative">
+                  <FloatingLabelInput
+                    id="yourCompanyGST"
+                    label="GST Number"
+                    value={yourCompany.gst}
+                    onChange={(e) => {
+                      const value = e.target.value.slice(0, 15);
+                      handleInputChange(setYourCompany)({
+                        target: { name: "gst", value },
+                      });
+                    }}
+                    name="gst"
+                    maxLength={15}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newGST = generateGSTNumber();
+                      setYourCompany(prev => ({ ...prev, gst: newGST }));
+                    }}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                    title="Generate new GST number"
+                  >
+                    <RotateCw className="h-4 w-4 text-gray-500" />
+                  </button>
+                </div>
+                
                 <FloatingLabelInput
-                  id="yourCompanyGST"
-                  label="GST No."
-                  value={yourCompany.gst}
-                  onChange={(e) => {
-                    const value = e.target.value.slice(0, 15);
-                    handleInputChange(setYourCompany)({
-                      target: { name: "gst", value },
-                    });
-                  }}
-                  name="gst"
-                  maxLength={15}
+                  id="cashier"
+                  label="Cashier Name"
+                  value={cashier}
+                  onChange={(e) => setCashier(e.target.value)}
+                  name="cashier"
                 />
-                <button
-                  type="button"
-                  onClick={() => {
-                    const newGST = generateGSTNumber();
-                    setYourCompany(prev => ({ ...prev, gst: newGST }));
-                  }}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-gray-200"
-                  title="Generate new GST number"
-                >
-                  <RotateCw size={16} />
-                </button>
               </div>
-              <FloatingLabelInput
-                id="cashier"
-                label="Cashier"
-                value={cashier}
-                onChange={(e) => setCashier(e.target.value)}
-                name="cashier"
-                className="mt-4"
-              />
             </div>
 
-            <div className="mb-6">
-              <h2 className="text-2xl font-semibold mb-4">Bill To</h2>
+            {/* Customer Information Card */}
+            <div className="bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20 receipt-card">
+              <h2 className="text-xl font-semibold text-gray-800 mb-6">Customer Information</h2>
               <FloatingLabelInput
                 id="billTo"
-                label="Bill To"
+                label="Customer Name"
                 value={billTo}
                 onChange={(e) => setBillTo(e.target.value)}
                 name="billTo"
               />
             </div>
 
-            <div className="mb-6">
-              <h2 className="text-2xl font-semibold mb-4">
-                Invoice Information
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Invoice Information Card */}
+            <div className="bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20 receipt-card">
+              <h2 className="text-xl font-semibold text-gray-800 mb-6">Invoice Details</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FloatingLabelInput
                   id="invoiceNumber"
                   label="Invoice Number"
@@ -415,188 +489,305 @@ const ReceiptPage = () => {
               </div>
             </div>
 
-            <ItemDetails
-              items={items}
-              handleItemChange={handleItemChange}
-              addItem={addItem}
-              removeItem={removeItem}
-            />
+            {/* Items Section */}
+            <div className="bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20 receipt-card">
+              <ItemDetails
+                items={items}
+                handleItemChange={handleItemChange}
+                addItem={addItem}
+                removeItem={removeItem}
+              />
+            </div>
 
-            <div className="mb-6">
-              <h3 className="text-lg font-medium mb-2">Totals</h3>
-              <div className="flex justify-between mb-2">
-                <span>Sub Total:</span>
-                <span>{formatCurrency(parseFloat(calculateSubTotal()), selectedCurrency)}</span>
+            {/* Totals Card */}
+            <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-2xl shadow-lg border border-white/20">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="p-2 bg-green-100 rounded-lg">
+                  <Calculator className="h-5 w-5 text-green-600" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-800">Calculation Summary</h3>
               </div>
-              <div className="flex justify-between mb-2">
-                <span>Tax (%):</span>
-                <input
-                  type="number"
-                  value={taxPercentage}
-                  onChange={(e) =>
-                    setTaxPercentage(parseFloat(e.target.value) || 0)
-                  }
-                  className="w-24 p-2 border rounded"
-                  min="0"
-                  max="28"
-                  step="1"
-                />
-              </div>
-              <div className="flex justify-between mb-2">
-                <span>Tax Amount:</span>
-                <span>{formatCurrency(parseFloat(calculateTaxAmount()), selectedCurrency)}</span>
-              </div>
-              <div className="flex justify-between font-bold">
-                <span>Grand Total:</span>
-                <span>{formatCurrency(parseFloat(calculateGrandTotal()), selectedCurrency)}</span>
+              
+              <div className="space-y-4">
+                <div className="flex justify-between items-center p-3 bg-white/50 rounded-lg">
+                  <span className="text-gray-700">Subtotal:</span>
+                  <span className="font-semibold">{formatCurrency(parseFloat(calculateSubTotal()), selectedCurrency)}</span>
+                </div>
+                
+                <div className="flex justify-between items-center p-3 bg-white/50 rounded-lg">
+                  <span className="text-gray-700">Tax Rate (%):</span>
+                  <input
+                    type="number"
+                    value={taxPercentage}
+                    onChange={(e) => setTaxPercentage(parseFloat(e.target.value) || 0)}
+                    className="w-20 px-3 py-1 border border-gray-300 rounded-lg text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    min="0"
+                    max="28"
+                    step="1"
+                  />
+                </div>
+                
+                <div className="flex justify-between items-center p-3 bg-white/50 rounded-lg">
+                  <span className="text-gray-700">Tax Amount:</span>
+                  <span className="font-semibold">{formatCurrency(parseFloat(calculateTaxAmount()), selectedCurrency)}</span>
+                </div>
+                
+                <div className="flex justify-between items-center p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-md">
+                  <span className="text-lg font-bold">Grand Total:</span>
+                  <span className="text-xl font-bold">{formatCurrency(parseFloat(calculateGrandTotal()), selectedCurrency)}</span>
+                </div>
               </div>
             </div>
 
-            <div className="mb-6">
-              <h3 className="text-lg font-medium mb-2">Notes</h3>
-              <textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                className="w-full p-2 border rounded"
-                rows="4"
-              ></textarea>
-            </div>
-            <div className="mb-6">
-              <div className="flex items-center mb-2">
-                <h3 className="text-lg font-medium">Footer</h3>
-                <button
-                  type="button"
-                  onClick={refreshFooter}
-                  className="ml-2 p-1 rounded-full hover:bg-gray-200"
-                  title="Refresh footer"
-                >
-                  <RefreshCw size={16} />
-                </button>
+            {/* Notes and Footer */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20 receipt-card">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Notes</h3>
+                <textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  rows="4"
+                  placeholder="Add any additional notes here..."
+                />
               </div>
-              <textarea
-                value={footer}
-                onChange={(e) => setFooter(e.target.value)}
-                className="w-full p-2 border rounded"
-                rows="2"
-              ></textarea>
-            </div>
-          </form>
-        </div>
-
-        <div className="w-full md:w-1/2 bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold mb-4">Receipt Preview</h2>
-          <div className="mb-4 flex items-center">
-            <h3 className="text-lg font-medium mr-4">Receipt Type</h3>
-            <div className="flex gap-4">
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="theme"
-                  value="Receipt1"
-                  checked={theme === "Receipt1"}
-                  onChange={() => setTheme("Receipt1")}
-                  className="mr-2"
+              
+              <div className="bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20 receipt-card">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-800">Footer Message</h3>
+                  <button
+                    type="button"
+                    onClick={refreshFooter}
+                    className="p-2 rounded-lg hover:bg-gray-100 transition-colors hover-lift"
+                    title="Generate random footer"
+                  >
+                    <RefreshCw className="h-4 w-4 text-gray-500" />
+                  </button>
+                </div>
+                <textarea
+                  value={footer}
+                  onChange={(e) => setFooter(e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  rows="4"
+                  placeholder="Thank you message..."
                 />
-                Receipt1
-              </label>
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="theme"
-                  value="Receipt2"
-                  checked={theme === "Receipt2"}
-                  onChange={() => setTheme("Receipt2")}
-                  className="mr-2"
-                />
-                Receipt2
-              </label>
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="theme"
-                  value="Receipt3"
-                  checked={theme === "Receipt3"}
-                  onChange={() => setTheme("Receipt3")}
-                  className="mr-2"
-                />
-                Receipt3
-              </label>
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="theme"
-                  value="Receipt4"
-                  checked={theme === "Receipt4"}
-                  onChange={() => setTheme("Receipt4")}
-                  className="mr-2"
-                />
-                Receipt4
-              </label>
+              </div>
             </div>
           </div>
-          <div ref={receiptRef} className="w-[380px] mx-auto border shadow-lg">
-            {theme === "Receipt1" && (
-              <Receipt1
-                data={{
-                  billTo,
-                  invoice,
-                  yourCompany,
-                  cashier,
-                  items,
-                  taxPercentage,
-                  notes,
-                  footer,
-                  selectedCurrency,
-                }}
-              />
-            )}
-            {theme === "Receipt2" && (
-              <Receipt2
-                data={{
-                  billTo,
-                  invoice,
-                  yourCompany,
-                  cashier,
-                  items,
-                  taxPercentage,
-                  notes,
-                  footer,
-                  selectedCurrency,
-                }}
-              />
-            )}
-            {theme === "Receipt3" && (
-              <Receipt3
-                data={{
-                  billTo,
-                  invoice,
-                  yourCompany,
-                  cashier,
-                  items,
-                  taxPercentage,
-                  notes,
-                  footer,
-                  selectedCurrency,
-                }}
-              />
-            )}
-            {theme === "Receipt4" && (
-              <Receipt4
-                data={{
-                  billTo,
-                  invoice,
-                  yourCompany,
-                  items,
-                  taxPercentage,
-                  footer,
-                  cashier,
-                  selectedCurrency,
-                }}
-              />
-            )}
+
+          {/* Preview Section */}
+          <div className="animate-slide-in-right">
+            <div className="bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20 sticky top-8">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-6">Live Preview</h2>
+              
+              {/* Theme Selector */}
+              <div className="mb-6">
+                <h3 className="text-lg font-medium text-gray-700 mb-4">Choose Template</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {['Receipt1', 'Receipt2', 'Receipt3', 'Receipt4'].map((receiptType) => (
+                    <label key={receiptType} className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="theme"
+                        value={receiptType}
+                        checked={theme === receiptType}
+                        onChange={() => setTheme(receiptType)}
+                        className="sr-only"
+                      />
+                      <div className={`w-4 h-4 rounded-full border-2 transition-all ${
+                        theme === receiptType 
+                          ? 'border-blue-500 bg-blue-500' 
+                          : 'border-gray-300 hover:border-blue-400'
+                      }`}>
+                        {theme === receiptType && (
+                          <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
+                        )}
+                      </div>
+                      <span className={`text-sm font-medium transition-colors ${
+                        theme === receiptType ? 'text-blue-600' : 'text-gray-600'
+                      }`}>
+                        {receiptType}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Receipt Preview */}
+              <div className="flex justify-center">
+                <div 
+                  ref={receiptRef} 
+                  className="w-[380px] bg-white rounded-lg shadow-xl border border-gray-200 receipt-preview print-area"
+                >
+                  {theme === "Receipt1" && (
+                    <Receipt1
+                      data={{
+                        billTo,
+                        invoice,
+                        yourCompany,
+                        cashier,
+                        items,
+                        taxPercentage,
+                        notes,
+                        footer,
+                        selectedCurrency,
+                      }}
+                    />
+                  )}
+                  {theme === "Receipt2" && (
+                    <Receipt2
+                      data={{
+                        billTo,
+                        invoice,
+                        yourCompany,
+                        cashier,
+                        items,
+                        taxPercentage,
+                        notes,
+                        footer,
+                        selectedCurrency,
+                      }}
+                    />
+                  )}
+                  {theme === "Receipt3" && (
+                    <Receipt3
+                      data={{
+                        billTo,
+                        invoice,
+                        yourCompany,
+                        cashier,
+                        items,
+                        taxPercentage,
+                        notes,
+                        footer,
+                        selectedCurrency,
+                      }}
+                    />
+                  )}
+                  {theme === "Receipt4" && (
+                    <Receipt4
+                      data={{
+                        billTo,
+                        invoice,
+                        yourCompany,
+                        items,
+                        taxPercentage,
+                        footer,
+                        cashier,
+                        selectedCurrency,
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Custom CSS animations and styles */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @keyframes fade-in {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          
+          @keyframes slide-in-left {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+          }
+          
+          @keyframes slide-in-right {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+          }
+          
+          @keyframes slide-down {
+            from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+          }
+          
+          .animate-fade-in {
+            animation: fade-in 0.6s ease-out;
+          }
+          
+          .animate-slide-in-left {
+            animation: slide-in-left 0.8s ease-out;
+          }
+          
+          .animate-slide-in-right {
+            animation: slide-in-right 0.8s ease-out 0.2s both;
+          }
+          
+          .animate-slide-down {
+            animation: slide-down 0.3s ease-out;
+          }
+          
+          /* Custom scrollbar for currency dropdown */
+          .max-h-60::-webkit-scrollbar {
+            width: 6px;
+          }
+          
+          .max-h-60::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+          }
+          
+          .max-h-60::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+          }
+          
+          .max-h-60::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+          }
+
+          /* Print styles */
+          @media print {
+            body * {
+              visibility: hidden;
+            }
+            .print-area, .print-area * {
+              visibility: visible;
+            }
+            .print-area {
+              position: absolute;
+              left: 0;
+              top: 0;
+              width: 100%;
+            }
+          }
+          
+          /* Hover effects for cards */
+          .receipt-card:hover {
+            background-color: rgba(255, 255, 255, 0.85);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+          }
+          
+          /* Focus styles for better accessibility */
+          input:focus, textarea:focus, select:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+          }
+          
+          /* Button hover animations */
+          .hover-lift:hover {
+            transform: translateY(-1px);
+            transition: transform 0.2s ease;
+          }
+          
+          .hover-lift:active {
+            transform: translateY(0);
+          }
+          
+          /* Receipt preview hover effect */
+          .receipt-preview:hover {
+            transform: scale(1.02);
+            transition: transform 0.3s ease;
+          }
+        `
+      }} />
     </div>
   );
 };
