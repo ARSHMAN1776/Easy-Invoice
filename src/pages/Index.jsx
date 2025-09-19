@@ -417,19 +417,19 @@ const Index = () => {
               <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-blue-500/10 to-purple-600/10 rounded-full blur-2xl"></div>
               
               <form className="relative z-10 space-y-8">
-                {/* Currency Selection - Enhanced */}
-                <div className="mb-8 p-6 bg-gradient-to-br from-indigo-50/80 to-blue-100/80 rounded-2xl border border-indigo-200/50 shadow-lg backdrop-blur-sm animate-fade-in-up hover:shadow-xl transition-all duration-500">
-                  <h3 className="text-2xl font-bold mb-4 text-slate-800 flex items-center gap-3">
-                    <span className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                      <FiDollarSign className="text-white text-sm" />
-                    </span>
-                    Currency Selection
-                  </h3>
-                  <CurrencyDropdown 
-                    selectedCurrency={selectedCurrency}
-                    onCurrencyChange={setSelectedCurrency}
-                  />
-                </div>
+               {/* Currency Selection - Enhanced */}
+<div className="mb-8 p-6 bg-gradient-to-br from-indigo-50/80 to-blue-100/80 rounded-2xl border border-indigo-200/50 shadow-lg backdrop-blur-sm animate-fade-in-up hover:shadow-xl transition-all duration-500 relative z-50">
+  <h3 className="text-2xl font-bold mb-4 text-slate-800 flex items-center gap-3">
+    <span className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+      <FiDollarSign className="text-white text-sm" />
+    </span>
+    Currency Selection
+  </h3>
+  <CurrencyDropdown 
+    selectedCurrency={selectedCurrency}
+    onCurrencyChange={setSelectedCurrency}
+  />
+</div>
 
                 {/* Enhanced Bill To Section */}
                 <div className="mb-8 p-8 bg-gradient-to-br from-rose-50/90 to-pink-100/90 rounded-3xl border border-rose-200/60 shadow-xl backdrop-blur-sm animate-fade-in-up hover:shadow-2xl transition-all duration-700 relative overflow-hidden" style={{animationDelay: '0.3s'}}>

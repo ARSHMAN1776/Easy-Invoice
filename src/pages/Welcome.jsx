@@ -17,336 +17,641 @@ const EasyInvoiceProLanding = () => {
     };
   }, []);
 
-  const handleNavigation = (e, url) => {
-    e.preventDefault();
-    setIsNavigating(true);
-    
-    // Prevent scrolling during transition
-    document.body.style.overflow = 'hidden';
-    
-    // Create professional loading overlay
-    const overlay = document.createElement('div');
-    overlay.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: linear-gradient(135deg, #EBF4FF 0%, #DBEAFE 25%, #BFDBFE 50%, #93C5FD 75%, #60A5FA 100%);
-      z-index: 9999;
-      opacity: 0;
-      transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      backdrop-filter: blur(10px);
-    `;
-    
-    // Professional loading animation with multiple elements
-    overlay.innerHTML = `
-      <div style="position: relative; text-align: center; transform: translateY(20px); opacity: 0; transition: all 0.8s ease-out 0.3s;">
-        
-        <!-- Logo Animation -->
-        <div style="margin-bottom: 40px; transform: scale(0.8); transition: all 0.6s ease-out 0.5s;" class="logo-container">
-          <div style="
-            width: 80px; 
-            height: 80px; 
-            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
-            position: relative;
-            overflow: hidden;
-          ">
-            <svg width="40" height="40" fill="white" viewBox="0 0 24 24">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14,2 14,8 20,8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/>
-              <line x1="16" y1="17" x2="8" y2="17"/>
-              <polyline points="10,9 9,9 8,9"/>
-            </svg>
-            <div style="
-              position: absolute;
-              top: -50%;
-              left: -50%;
-              width: 200%;
-              height: 200%;
-              background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
-              transform: rotate(45deg);
-              animation: shimmer 2s infinite;
-            "></div>
-          </div>
-        </div>
-        
-        <!-- Loading Spinner -->
-        <div style="margin-bottom: 30px; position: relative;">
-          <div style="
-            width: 80px;
-            height: 80px;
-            border: 3px solid rgba(59, 130, 246, 0.2);
-            border-radius: 50%;
-            position: relative;
-            margin: 0 auto;
-          ">
-            <div style="
-              width: 80px;
-              height: 80px;
-              border: 3px solid transparent;
-              border-top: 3px solid #3B82F6;
-              border-right: 3px solid #1D4ED8;
-              border-radius: 50%;
-              animation: professionalSpin 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-              position: absolute;
-              top: -3px;
-              left: -3px;
-            "></div>
-          </div>
-          
-          <!-- Floating dots around spinner -->
-          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-            <div style="
-              position: absolute;
-              width: 8px;
-              height: 8px;
-              background: #3B82F6;
-              border-radius: 50%;
-              animation: orbit 3s linear infinite;
-              transform-origin: 50px 0;
-            "></div>
-            <div style="
-              position: absolute;
-              width: 6px;
-              height: 6px;
-              background: #1D4ED8;
-              border-radius: 50%;
-              animation: orbit 3s linear infinite reverse;
-              transform-origin: -40px 0;
-              animation-delay: -1s;
-            "></div>
-            <div style="
-              position: absolute;
-              width: 4px;
-              height: 4px;
-              background: #60A5FA;
-              border-radius: 50%;
-              animation: orbit 3s linear infinite;
-              transform-origin: 0 35px;
-              animation-delay: -2s;
-            "></div>
-          </div>
-        </div>
-        
-        <!-- Professional Text -->
-        <div style="margin-bottom: 20px;">
-          <h3 style="
-            font-size: 28px;
-            font-weight: 700;
-            color: #1E40AF;
-            margin-bottom: 12px;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #1E40AF, #3B82F6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-          ">Loading EasyInvoicePro</h3>
-          
-          <div style="
-            font-size: 16px;
-            color: #1E40AF;
-            opacity: 0.8;
-            font-weight: 500;
-            animation: fadeInOut 2s ease-in-out infinite;
-          " class="loading-text">Preparing your workspace...</div>
-        </div>
-        
-        <!-- Progress Dots -->
-        <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 20px;">
-          <div style="
-            width: 12px;
-            height: 12px;
-            background: #3B82F6;
-            border-radius: 50%;
-            animation: progressDot 1.4s ease-in-out infinite;
-          "></div>
-          <div style="
-            width: 12px;
-            height: 12px;
-            background: #3B82F6;
-            border-radius: 50%;
-            animation: progressDot 1.4s ease-in-out infinite;
-            animation-delay: 0.2s;
-          "></div>
-          <div style="
-            width: 12px;
-            height: 12px;
-            background: #3B82F6;
-            border-radius: 50%;
-            animation: progressDot 1.4s ease-in-out infinite;
-            animation-delay: 0.4s;
-          "></div>
-        </div>
-        
-        <!-- Floating particles -->
-        <div style="position: absolute; top: -20px; left: -20px; width: calc(100% + 40px); height: calc(100% + 40px); pointer-events: none;">
+const handleNavigation = (e, url) => {
+  e.preventDefault();
+  
+  // Check if user name is already stored
+  const storedName = localStorage.getItem('userName');
+  
+  if (!storedName) {
+    // Show name input modal first
+    showNameInputModal(url);
+  } else {
+    // Proceed directly to loading with stored name
+    startLoadingAnimation(url, storedName);
+  }
+};
+
+const showNameInputModal = (url) => {
+  // Prevent scrolling
+  document.body.style.overflow = 'hidden';
+  
+  // Create name input modal
+  const modal = document.createElement('div');
+  modal.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #EBF4FF 0%, #DBEAFE 25%, #BFDBFE 50%, #93C5FD 75%, #60A5FA 100%);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  `;
+  
+  modal.innerHTML = `
+    <div style="
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 35px 40px 30px 40px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 
+        0 20px 40px rgba(59, 130, 246, 0.12),
+        0 8px 16px rgba(30, 64, 175, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      text-align: center;
+      max-width: 450px;
+      width: 90%;
+      max-height: 85vh;
+      transform: translateY(30px) scale(0.95);
+      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+    " class="modal-content">
+      
+      <!-- Background Animated Elements -->
+      <div style="
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 70% 80%, rgba(29, 78, 216, 0.05) 0%, transparent 50%);
+        animation: backgroundFloat 8s ease-in-out infinite;
+        pointer-events: none;
+      "></div>
+      
+      <!-- Logo Container -->
+      <div style="margin-bottom: 25px; position: relative; z-index: 2;">
+        <div style="
+          width: 60px; 
+          height: 60px; 
+          background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 50%, #1E40AF 100%);
+          border-radius: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto;
+          box-shadow: 
+            0 12px 24px rgba(59, 130, 246, 0.2),
+            0 4px 8px rgba(30, 64, 175, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+          position: relative;
+          overflow: hidden;
+          transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+          animation: logoFloat 3s ease-in-out infinite;
+        " class="logo-container">
+          <svg width="30" height="30" fill="white" viewBox="0 0 24 24" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14,2 14,8 20,8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10,9 9,9 8,9"/>
+          </svg>
           <div style="
             position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(59, 130, 246, 0.6);
-            border-radius: 50%;
-            animation: float1 4s ease-in-out infinite;
-            top: 20%;
-            left: 10%;
-          "></div>
-          <div style="
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: rgba(29, 78, 216, 0.4);
-            border-radius: 50%;
-            animation: float2 5s ease-in-out infinite;
-            top: 60%;
-            right: 15%;
-            animation-delay: -1s;
-          "></div>
-          <div style="
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: rgba(96, 165, 250, 0.5);
-            border-radius: 50%;
-            animation: float3 6s ease-in-out infinite;
-            bottom: 30%;
-            left: 20%;
-            animation-delay: -2s;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
+            transform: rotate(45deg);
+            animation: logoShimmer 3s ease-in-out infinite;
+            pointer-events: none;
           "></div>
         </div>
       </div>
       
-      <style>
-        @keyframes professionalSpin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        
-        @keyframes shimmer {
-          0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-          100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-        }
-        
-        @keyframes orbit {
-          0% { transform: rotate(0deg) translateX(50px) rotate(0deg); }
-          100% { transform: rotate(360deg) translateX(50px) rotate(-360deg); }
-        }
-        
-        @keyframes fadeInOut {
-          0%, 100% { opacity: 0.8; }
-          50% { opacity: 1; }
-        }
-        
-        @keyframes progressDot {
-          0%, 80%, 100% { 
-            transform: scale(0.8);
-            opacity: 0.5;
-          }
-          40% { 
-            transform: scale(1.2);
-            opacity: 1;
-          }
-        }
-        
-        @keyframes float1 {
-          0%, 100% { 
-            transform: translateY(0px) translateX(0px);
-            opacity: 0.6;
-          }
-          50% { 
-            transform: translateY(-20px) translateX(10px);
-            opacity: 1;
-          }
-        }
-        
-        @keyframes float2 {
-          0%, 100% { 
-            transform: translateY(0px) translateX(0px) rotate(0deg);
-            opacity: 0.4;
-          }
-          50% { 
-            transform: translateY(-15px) translateX(-10px) rotate(180deg);
-            opacity: 0.8;
-          }
-        }
-        
-        @keyframes float3 {
-          0%, 100% { 
-            transform: translateY(0px) translateX(0px) scale(1);
-            opacity: 0.5;
-          }
-          33% { 
-            transform: translateY(-10px) translateX(15px) scale(1.5);
-            opacity: 1;
-          }
-          66% { 
-            transform: translateY(5px) translateX(-5px) scale(0.8);
-            opacity: 0.7;
-          }
-        }
-        
-        .logo-container {
-          transform: scale(1) !important;
-        }
-        
-        .loading-text {
-          background: linear-gradient(90deg, #1E40AF, #3B82F6, #60A5FA, #3B82F6, #1E40AF);
-          background-size: 200% 100%;
+      <!-- Welcome Text with Gradient Animation -->
+      <div style="margin-bottom: 30px; position: relative; z-index: 2;">
+        <h2 style="
+          font-size: 26px;
+          font-weight: 700;
+          background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 25%, #60A5FA 50%, #3B82F6 75%, #1E40AF 100%);
+          background-size: 300% 100%;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
-          animation: textShimmer 3s ease-in-out infinite, fadeInOut 2s ease-in-out infinite;
-        }
+          margin-bottom: 10px;
+          letter-spacing: -0.5px;
+          animation: titleGradient 4s ease-in-out infinite;
+          text-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+        ">Welcome to EasyInvoicePro</h2>
         
-        @keyframes textShimmer {
-          0% { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
-        }
-      </style>
-    `;
-    
-    document.body.appendChild(overlay);
-    
-    // Trigger entrance animations
-    requestAnimationFrame(() => {
-      overlay.style.opacity = '1';
+        <p style="
+          font-size: 15px;
+          color: #64748B;
+          line-height: 1.5;
+          font-weight: 400;
+          opacity: 0.9;
+          margin: 0;
+        ">Enter your name to personalize your workspace</p>
+      </div>
       
-      // Animate content after overlay appears
-      setTimeout(() => {
-        const content = overlay.querySelector('div');
-        if (content) {
-          content.style.transform = 'translateY(0)';
-          content.style.opacity = '1';
-        }
-      }, 300);
-    });
+      <!-- Enhanced Name Input -->
+      <div style="margin-bottom: 25px; position: relative; z-index: 2;">
+        <div style="position: relative;">
+          <input 
+            type="text" 
+            id="userNameInput"
+            placeholder="Enter your name..."
+            style="
+              width: 100%;
+              padding: 16px 20px;
+              border: 2px solid rgba(226, 232, 240, 0.8);
+              border-radius: 12px;
+              font-size: 16px;
+              font-weight: 500;
+              color: #1E293B;
+              background: rgba(248, 250, 252, 0.8);
+              backdrop-filter: blur(10px);
+              transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+              outline: none;
+              box-sizing: border-box;
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            "
+            autocomplete="given-name"
+            maxlength="50"
+          />
+          <div style="
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3B82F6, #1D4ED8);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: translateX(-50%);
+          " class="input-underline"></div>
+        </div>
+      </div>
+      
+      <!-- Enhanced Action Buttons -->
+      <div style="display: flex; gap: 12px; flex-direction: column; position: relative; z-index: 2;">
+        <button 
+          id="continueBtn"
+          disabled
+          style="
+            width: 100%;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 50%, #1E40AF 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 0.4;
+            transform: scale(0.96);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
+          "
+        >
+          <span style="position: relative; z-index: 2;">Continue to EasyInvoicePro</span>
+          <div style="
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: all 0.6s ease;
+          " class="button-shine"></div>
+        </button>
+        
+        <button 
+          id="skipBtn"
+          style="
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(248, 250, 252, 0.8);
+            backdrop-filter: blur(10px);
+            color: #64748B;
+            border: 2px solid rgba(226, 232, 240, 0.6);
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+          "
+        >
+          <span style="position: relative; z-index: 2;">Skip for now</span>
+        </button>
+      </div>
+    </div>
     
-    // Navigate after professional animation sequence
-    setTimeout(() => {
-      // Add exit animation
-      const content = overlay.querySelector('div');
-      if (content) {
-        content.style.transform = 'translateY(-20px)';
-        content.style.opacity = '0';
+    <style>
+      @keyframes backgroundFloat {
+        0%, 100% { transform: rotate(0deg) scale(1); }
+        50% { transform: rotate(5deg) scale(1.05); }
       }
       
-      setTimeout(() => {
-        window.location.href = url;
-      }, 400);
-    }, 2000);
-  };
+      @keyframes logoFloat {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-4px); }
+      }
+      
+      @keyframes logoShimmer {
+        0% { transform: translateX(-150%) translateY(-150%) rotate(45deg); }
+        50% { transform: translateX(150%) translateY(150%) rotate(45deg); }
+        100% { transform: translateX(-150%) translateY(-150%) rotate(45deg); }
+      }
+      
+      @keyframes titleGradient {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+      
+      @keyframes particleFloat1 {
+        0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.6; }
+        50% { transform: translateY(-8px) translateX(4px); opacity: 1; }
+      }
+      
+      @keyframes particleFloat2 {
+        0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.8; }
+        50% { transform: translateY(-6px) translateX(-5px); opacity: 1; }
+      }
+      
+      @keyframes particleFloat3 {
+        0%, 100% { transform: translateY(0px) translateX(0px) scale(1); opacity: 0.7; }
+        50% { transform: translateY(-5px) translateX(6px) scale(1.2); opacity: 1; }
+      }
+      
+      /* Input Enhanced Styles */
+      #userNameInput:focus {
+        border-color: rgba(59, 130, 246, 0.8) !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 
+          0 12px 24px rgba(59, 130, 246, 0.15),
+          0 4px 8px rgba(30, 64, 175, 0.1) !important;
+      }
+      
+      #userNameInput:focus + .input-underline {
+        width: 100% !important;
+      }
+      
+      #userNameInput:hover:not(:focus) {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+        border-color: rgba(203, 213, 225, 0.8);
+      }
+      
+      /* Button Enhanced Styles */
+      #continueBtn:not(:disabled) {
+        opacity: 1 !important;
+        transform: scale(1) !important;
+      }
+      
+      #continueBtn:not(:disabled):hover {
+        transform: translateY(-2px) scale(1.02) !important;
+        box-shadow: 
+          0 8px 16px rgba(59, 130, 246, 0.25),
+          0 4px 8px rgba(30, 64, 175, 0.15) !important;
+      }
+      
+      #continueBtn:not(:disabled):hover .button-shine {
+        left: 100% !important;
+      }
+      
+      #continueBtn:not(:disabled):active {
+        transform: translateY(-1px) scale(0.98) !important;
+      }
+      
+      #skipBtn:hover {
+        transform: translateY(-2px);
+        border-color: rgba(148, 163, 184, 0.8) !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        color: #475569 !important;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+      }
+      
+      #skipBtn:active {
+        transform: translateY(0px);
+      }
+      
+      .logo-container:hover {
+        transform: translateY(-2px) scale(1.05) !important;
+        box-shadow: 
+          0 16px 32px rgba(59, 130, 246, 0.3),
+          0 8px 16px rgba(30, 64, 175, 0.15) !important;
+      }
+      
+      .modal-content {
+        animation: modalEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+      
+      @keyframes modalEntrance {
+        from {
+          opacity: 0;
+          transform: translateY(30px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+    </style>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  // Animate modal entrance
+  requestAnimationFrame(() => {
+    modal.style.opacity = '1';
+    const content = modal.querySelector('.modal-content');
+    content.style.transform = 'translateY(0)';
+  });
+  
+  // Get elements
+  const nameInput = document.getElementById('userNameInput');
+  const continueBtn = document.getElementById('continueBtn');
+  const skipBtn = document.getElementById('skipBtn');
+  
+  // Focus on input
+  setTimeout(() => nameInput.focus(), 300);
+  
+  // Enable/disable continue button based on input
+  nameInput.addEventListener('input', (e) => {
+    const name = e.target.value.trim();
+    continueBtn.disabled = name.length < 2;
+  });
+  
+  // Handle continue with name
+  continueBtn.addEventListener('click', () => {
+    const name = nameInput.value.trim();
+    if (name.length >= 2) {
+      // Store name in localStorage
+      localStorage.setItem('userName', name);
+      
+      // Remove modal and start loading
+      removeModal(modal, () => {
+        startLoadingAnimation(url, name);
+      });
+    }
+  });
+  
+  // Handle skip
+  skipBtn.addEventListener('click', () => {
+    removeModal(modal, () => {
+      startLoadingAnimation(url, 'Guest');
+    });
+  });
+  
+  // Handle Enter key
+  nameInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && !continueBtn.disabled) {
+      continueBtn.click();
+    }
+  });
+};
 
+const removeModal = (modal, callback) => {
+  const content = modal.querySelector('.modal-content');
+  content.style.transform = 'translateY(-30px)';
+  content.style.opacity = '0';
+  modal.style.opacity = '0';
+  
+  setTimeout(() => {
+    document.body.removeChild(modal);
+    callback();
+  }, 300);
+};
+
+const startLoadingAnimation = (url, userName) => {
+  // Create professional loading overlay
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #EBF4FF 0%, #DBEAFE 25%, #BFDBFE 50%, #93C5FD 75%, #60A5FA 100%);
+    z-index: 9999;
+    opacity: 0;
+    transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    backdrop-filter: blur(10px);
+  `;
+  
+  // Professional loading animation with personalized message
+  overlay.innerHTML = `
+    <div style="position: relative; text-align: center; transform: translateY(20px); opacity: 0; transition: all 0.8s ease-out 0.3s;">
+      
+      <!-- Logo Animation -->
+      <div style="margin-bottom: 40px; transform: scale(0.8); transition: all 0.6s ease-out 0.5s;" class="logo-container">
+        <div style="
+          width: 80px; 
+          height: 80px; 
+          background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+          border-radius: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto;
+          box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+          position: relative;
+          overflow: hidden;
+        ">
+          <svg width="40" height="40" fill="white" viewBox="0 0 24 24">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14,2 14,8 20,8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10,9 9,9 8,9"/>
+          </svg>
+          <div style="
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 2s infinite;
+          "></div>
+        </div>
+      </div>
+      
+      <!-- Loading Spinner -->
+      <div style="margin-bottom: 30px; position: relative;">
+        <div style="
+          width: 80px;
+          height: 80px;
+          border: 3px solid rgba(59, 130, 246, 0.2);
+          border-radius: 50%;
+          position: relative;
+          margin: 0 auto;
+        ">
+          <div style="
+            width: 80px;
+            height: 80px;
+            border: 3px solid transparent;
+            border-top: 3px solid #3B82F6;
+            border-right: 3px solid #1D4ED8;
+            border-radius: 50%;
+            animation: professionalSpin 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            position: absolute;
+            top: -3px;
+            left: -3px;
+          "></div>
+        </div>
+      </div>
+      
+      <!-- Personalized Welcome Text -->
+      <div style="margin-bottom: 20px;">
+        <h3 style="
+          font-size: 32px;
+          font-weight: 700;
+          color: #1E40AF;
+          margin-bottom: 8px;
+          letter-spacing: -0.5px;
+          background: linear-gradient(135deg, #1E40AF, #3B82F6);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        ">Welcome ${userName}!</h3>
+        
+        <div style="
+          font-size: 16px;
+          color: #1E40AF;
+          opacity: 0.8;
+          font-weight: 500;
+          animation: fadeInOut 2s ease-in-out infinite;
+        " class="loading-text">Setting up your personalized workspace...</div>
+      </div>
+      
+      <!-- Progress Dots -->
+      <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 20px;">
+        <div style="
+          width: 12px;
+          height: 12px;
+          background: #3B82F6;
+          border-radius: 50%;
+          animation: progressDot 1.4s ease-in-out infinite;
+        "></div>
+        <div style="
+          width: 12px;
+          height: 12px;
+          background: #3B82F6;
+          border-radius: 50%;
+          animation: progressDot 1.4s ease-in-out infinite;
+          animation-delay: 0.2s;
+        "></div>
+        <div style="
+          width: 12px;
+          height: 12px;
+          background: #3B82F6;
+          border-radius: 50%;
+          animation: progressDot 1.4s ease-in-out infinite;
+          animation-delay: 0.4s;
+        "></div>
+      </div>
+    </div>
+    
+    <style>
+      @keyframes professionalSpin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      @keyframes shimmer {
+        0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+        100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+      }
+      
+      @keyframes fadeInOut {
+        0%, 100% { opacity: 0.8; }
+        50% { opacity: 1; }
+      }
+      
+      @keyframes progressDot {
+        0%, 80%, 100% { 
+          transform: scale(0.8);
+          opacity: 0.5;
+        }
+        40% { 
+          transform: scale(1.2);
+          opacity: 1;
+        }
+      }
+      
+      .logo-container {
+        transform: scale(1) !important;
+      }
+      
+      .loading-text {
+        background: linear-gradient(90deg, #1E40AF, #3B82F6, #60A5FA, #3B82F6, #1E40AF);
+        background-size: 200% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: textShimmer 3s ease-in-out infinite, fadeInOut 2s ease-in-out infinite;
+      }
+      
+      @keyframes textShimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
+    </style>
+  `;
+  
+  document.body.appendChild(overlay);
+  
+  // Trigger entrance animations
+  requestAnimationFrame(() => {
+    overlay.style.opacity = '1';
+    
+    // Animate content after overlay appears
+    setTimeout(() => {
+      const content = overlay.querySelector('div');
+      if (content) {
+        content.style.transform = 'translateY(0)';
+        content.style.opacity = '1';
+      }
+    }, 300);
+  });
+  
+  // Navigate after professional animation sequence
+  setTimeout(() => {
+    // Add exit animation
+    const content = overlay.querySelector('div');
+    if (content) {
+      content.style.transform = 'translateY(-20px)';
+      content.style.opacity = '0';
+    }
+    
+    setTimeout(() => {
+      // Restore scrolling
+      document.body.style.overflow = '';
+      window.location.href = url;
+    }, 400);
+  }, 2500);
+};
+
+// Optional: Add function to clear stored name if needed
+const clearStoredUserName = () => {
+  localStorage.removeItem('userName');
+};
+
+// Optional: Get stored user name
+const getStoredUserName = () => {
+  return localStorage.getItem('userName');
+};
   const keyFeatures = [
     { 
       icon: FileText, 

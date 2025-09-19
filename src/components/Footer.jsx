@@ -24,17 +24,21 @@ const Footer = () => {
           </div>
           
           {/* Quick Links - horizontal */}
-          <div className="flex items-center space-x-10">
-            {['Templates', 'Support', 'Privacy'].map((item) => (
-              <a
-                key={item}
-                href="#"
-                className="text-slate-300 hover:text-blue-400 transition-colors duration-200 text-base font-medium py-2"
-              >
-                {item}
-              </a>
-            ))}
-          </div>
+         <div className="flex items-center space-x-10">
+  {[
+    { name: 'Templates', href: '/template' },
+    { name: 'Support', href: '/contact' },
+    { name: 'Privacy', href: '/contact' }
+  ].map((item) => (
+    <a
+      key={item.name}
+      href={item.href}
+      className="text-slate-300 hover:text-blue-400 transition-colors duration-200 text-base font-medium py-2"
+    >
+      {item.name}
+    </a>
+  ))}
+</div>
           
           {/* Copyright & Social */}
           <div className="flex items-center space-x-8">

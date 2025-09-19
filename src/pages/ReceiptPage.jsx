@@ -347,18 +347,17 @@ const ReceiptPage = () => {
 
             {/* Action Buttons */}
             <button
-              onClick={handlePrint}
-              disabled={isPrinting}
-              className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:bg-green-600 disabled:opacity-50 hover-lift"
-            >
-              {isPrinting ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Printer className="h-4 w-4" />
-              )}
-              <span className="hidden sm:inline">Print</span>
-            </button>
-
+  onClick={handlePrint}
+  disabled={isPrinting}
+  className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:bg-green-600 disabled:opacity-50 hover-lift"
+>
+  {isPrinting ? (
+    <Loader2 className="h-4 w-4 animate-spin" />
+  ) : (
+    <Printer className="h-4 w-4" />
+  )}
+  <span className="hidden sm:inline">Print</span>
+</button>
             <button
               onClick={handleDownloadPDF}
               disabled={isDownloading}
