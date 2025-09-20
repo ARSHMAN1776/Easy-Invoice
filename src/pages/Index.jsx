@@ -531,58 +531,82 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* Enhanced Invoice Information Section */}
-                <div className="mb-8 p-8 bg-gradient-to-br from-blue-50/90 to-indigo-100/90 rounded-3xl border border-blue-200/60 shadow-xl backdrop-blur-sm animate-fade-in-up hover:shadow-2xl transition-all duration-700 relative overflow-hidden" style={{animationDelay: '0.4s'}}>
-                  <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-br from-blue-500/10 to-indigo-600/10 rounded-full blur-2xl"></div>
-                  <h2 className="text-3xl font-black mb-8 text-slate-800 flex items-center gap-4">
-                    <div className="relative">
-                      <span className="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-xl">
-                        <span className="text-white font-black text-xl">#</span>
-                      </span>
-                      <div className="absolute -top-2 -right-2 w-5 h-5 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full animate-bounce shadow-lg"></div>
-                    </div>
-                    Invoice Information
-                    <div className="ml-auto w-8 h-8 bg-gradient-to-r from-emerald-400 to-cyan-500 rounded-full animate-pulse"></div>
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="relative group">
-                      <FloatingLabelInput
-                        id="invoiceNumber"
-                        label="Invoice #"
-                        value={invoice.number}
-                        onChange={handleInputChange(setInvoice)}
-                        name="number"
-                        className="border-2 border-blue-200 focus:border-blue-500 bg-white/90 backdrop-blur-sm rounded-xl transition-all duration-300 group-hover:shadow-lg hover:bg-white/95 h-14 text-base font-semibold px-4"
-                      />
-                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-emerald-400 to-cyan-500 rounded-full animate-bounce"></div>
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none"></div>
-                    </div>
-                    <div className="group relative">
-                      <FloatingLabelInput
-                        id="invoiceDate"
-                        label="Invoice Date"
-                        type="date"
-                        value={invoice.date}
-                        onChange={handleInputChange(setInvoice)}
-                        name="date"
-                        className="bg-white/90 backdrop-blur-sm rounded-xl border-2 border-slate-200 focus:border-blue-500 transition-all duration-300 group-hover:shadow-lg hover:bg-white/95 h-14 text-base font-semibold px-4"
-                      />
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none"></div>
-                    </div>
-                    <div className="group relative">
-                      <FloatingLabelInput
-                        id="paymentDate"
-                        label="Payment Due Date"
-                        type="date"
-                        value={invoice.paymentDate}
-                        onChange={handleInputChange(setInvoice)}
-                        name="paymentDate"
-                        className="bg-white/90 backdrop-blur-sm rounded-xl border-2 border-slate-200 focus:border-blue-500 transition-all duration-300 group-hover:shadow-lg hover:bg-white/95 h-14 text-base font-semibold px-4"
-                      />
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none"></div>
-                    </div>
-                  </div>
-                </div>
+                {/* Enhanced Invoice Information Section - Fixed Overlapping Labels */}
+<div className="mb-8 p-8 bg-gradient-to-br from-blue-50/90 to-indigo-100/90 rounded-3xl border border-blue-200/60 shadow-xl backdrop-blur-sm animate-fade-in-up hover:shadow-2xl transition-all duration-700 relative overflow-hidden" style={{animationDelay: '0.4s'}}>
+  <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-br from-blue-500/10 to-indigo-600/10 rounded-full blur-2xl"></div>
+  <h2 className="text-3xl font-black mb-8 text-slate-800 flex items-center gap-4">
+    <div className="relative">
+      <span className="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-xl">
+        <span className="text-white font-black text-xl">#</span>
+      </span>
+      <div className="absolute -top-2 -right-2 w-5 h-5 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full animate-bounce shadow-lg"></div>
+    </div>
+    Invoice Information
+    <div className="ml-auto w-8 h-8 bg-gradient-to-r from-emerald-400 to-cyan-500 rounded-full animate-pulse"></div>
+  </h2>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="relative group">
+      <div className="relative">
+        <input
+          id="invoiceNumber"
+          name="number"
+          value={invoice.number}
+          onChange={handleInputChange(setInvoice)}
+          className="peer w-full border-2 border-blue-200 focus:border-blue-500 bg-white/90 backdrop-blur-sm rounded-xl transition-all duration-300 group-hover:shadow-lg hover:bg-white/95 h-14 text-base font-semibold px-4 pt-6 pb-2 placeholder-transparent focus:outline-none"
+          placeholder="Invoice #"
+        />
+        <label 
+          htmlFor="invoiceNumber"
+          className="absolute left-4 top-2 text-xs font-medium text-slate-600 transition-all duration-300 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-400 peer-placeholder-shown:top-4 peer-focus:top-2 peer-focus:text-xs peer-focus:text-blue-600 pointer-events-none"
+        >
+          Invoice #
+        </label>
+      </div>
+      <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-emerald-400 to-cyan-500 rounded-full animate-bounce"></div>
+      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none"></div>
+    </div>
+    
+    <div className="group relative">
+      <div className="relative">
+        <input
+          id="invoiceDate"
+          name="date"
+          type="date"
+          value={invoice.date}
+          onChange={handleInputChange(setInvoice)}
+          className="peer w-full bg-white/90 backdrop-blur-sm rounded-xl border-2 border-slate-200 focus:border-blue-500 transition-all duration-300 group-hover:shadow-lg hover:bg-white/95 h-14 text-base font-semibold px-4 pt-6 pb-2 focus:outline-none"
+        />
+        <label 
+          htmlFor="invoiceDate"
+          className="absolute left-4 top-2 text-xs font-medium text-slate-600 transition-all duration-300 pointer-events-none"
+        >
+          Invoice Date
+        </label>
+      </div>
+      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none"></div>
+    </div>
+    
+    <div className="group relative">
+      <div className="relative">
+        <input
+          id="paymentDate"
+          name="paymentDate"
+          type="date"
+          value={invoice.paymentDate}
+          onChange={handleInputChange(setInvoice)}
+          className="peer w-full bg-white/90 backdrop-blur-sm rounded-xl border-2 border-slate-200 focus:border-blue-500 transition-all duration-300 group-hover:shadow-lg hover:bg-white/95 h-14 text-base font-semibold px-4 pt-6 pb-2 focus:outline-none"
+        />
+        <label 
+          htmlFor="paymentDate"
+          className="absolute left-4 top-2 text-xs font-medium text-slate-600 transition-all duration-300 pointer-events-none"
+        >
+          Payment Due Date
+        </label>
+      </div>
+      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none"></div>
+    </div>
+  </div>
+</div>
 
                 {/* Enhanced Your Company Section */}
                 <div className="mb-8 p-8 bg-gradient-to-br from-emerald-50/90 to-cyan-100/90 rounded-3xl border border-emerald-200/60 shadow-xl backdrop-blur-sm animate-fade-in-up hover:shadow-2xl transition-all duration-700 relative overflow-hidden" style={{animationDelay: '0.6s'}}>
